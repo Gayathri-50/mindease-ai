@@ -20,7 +20,7 @@ function AIChat() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5001/api/chat",
+        "https://mindease-ai-mtzh.onrender.com/api/chat",
         {
           message: currentMessage,
         }
