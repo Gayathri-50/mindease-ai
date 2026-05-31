@@ -18,8 +18,12 @@ const Mood = () => {
       const response = await API.get("/moods");
       setMoods(response.data);
     } catch (error) {
-      console.log(error);
-      alert("Failed to load moods");
+      console.error("getMoods error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to load moods (check console for details)");
     }
   };
 
@@ -38,8 +42,12 @@ const Mood = () => {
       getMoods();
 
     } catch (error) {
-      console.log(error);
-      alert("Failed to save mood");
+      console.error("saveMood error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to save mood (check console for details)");
     }
   };
 
@@ -54,9 +62,13 @@ const deleteMood = async (id) => {
 
   } catch (error) {
 
-    console.log(error);
+    console.error("deleteMood error", {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
 
-    alert("Failed to delete mood");
+    alert("Failed to delete mood (check console for details)");
 
   }
 };

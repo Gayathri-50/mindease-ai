@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 
 function AIChat() {
   const [message, setMessage] = useState("");
@@ -19,14 +19,11 @@ function AIChat() {
     setMessage("");
 
     try {
-      const res = await axios.post(
-        "https://mindease-ai-mtzh.onrender.com/api/chat",
-        {
-          message: currentMessage,
-        }
-      );
+      const res = await API.post("/chat", {
+        message: currentMessage,
+      });
 
-      const botMessage = {
+      const botMessage = {                                                                                                                  
         type: "bot",
         text: res.data.reply,
       };

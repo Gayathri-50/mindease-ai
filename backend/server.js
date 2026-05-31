@@ -10,8 +10,22 @@ const aiRoutes = require("./routes/aiRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const app = express();
 
-app.use(cors());
+const allowedOrigin = process.env.ALLOWED_ORIGIN || '*';
+app.use(
+  cors({
+    origin: allowedOrigin,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Authorization'],
+  })
+);
 app.use(express.json());
+
+// Simple request logger to help identify failing endpoints in production logs
+app.use((req, res, next) => {
+  console.log(`[REQ] ${req.method} ${req.originalUrl}`);
+  next();
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/moods", moodRoutes);
 app.use("/api/journal", journalRoutes);

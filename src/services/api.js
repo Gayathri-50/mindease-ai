@@ -1,20 +1,33 @@
 import axios from "axios";
 
+const DEFAULT_BACKEND = "https://mindease-ai-mtzh.onrender.com/api";
 const API = axios.create({
-  baseURL: "https://mindease-ai-mtzh.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : DEFAULT_BACKEND,
 });
 
 API.interceptors.request.use((req) => {
-
   const token = localStorage.getItem("token");
 
   if (token) {
-    // FIX: Use standard "Bearer <token>" format
     req.headers.authorization = `Bearer ${token}`;
   }
 
   return req;
-
 });
+
+API.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    // centralize logging for failed API calls in production
+    console.error("API request failed:", {
+      url: err.config?.url,
+      method: err.config?.method,
+      status: err.response?.status,
+      data: err.response?.data,
+      message: err.message,
+    });
+    return Promise.reject(err);
+  }
+);
 
 export default API;

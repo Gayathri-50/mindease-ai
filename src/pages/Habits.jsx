@@ -10,8 +10,12 @@ const Habits = () => {
       const response = await API.get("/habits");
       setHabits(response.data);
     } catch (error) {
-      console.log(error);
-      alert("Failed to load habits");
+      console.error("getHabits error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to load habits (check console for details)");
     }
   };
 
@@ -32,8 +36,12 @@ const Habits = () => {
 
       alert("Habit added successfully");
     } catch (error) {
-      console.log(error);
-      alert("Failed to add habit");
+      console.error("addHabit error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to add habit (check console for details)");
     }
   };
 
@@ -43,8 +51,12 @@ const Habits = () => {
 
       getHabits();
     } catch (error) {
-      console.log(error);
-      alert("Failed to update habit");
+      console.error("toggleHabit error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to update habit (check console for details)");
     }
   };
 
@@ -56,8 +68,12 @@ const Habits = () => {
 
       alert("Habit deleted successfully");
     } catch (error) {
-      console.log(error);
-      alert("Failed to delete habit");
+      console.error("deleteHabit error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to delete habit (check console for details)");
     }
   };
 

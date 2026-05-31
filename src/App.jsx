@@ -8,7 +8,7 @@ import Habits from "./pages/Habits"
 import Journal from "./pages/Journal"
 import AIChat from "./pages/AIChat"
 import Profile from "./pages/Profile"
-
+import Register from "./pages/Register";
 function App() {
   return (
     <BrowserRouter>
@@ -36,7 +36,7 @@ function App() {
             <Route path="/chat" element={<AIChat />} />
 
             <Route path="/profile" element={<Profile />} />
-
+<Route path="/register" element={<Register />} />
           </Routes>
 
         </div>

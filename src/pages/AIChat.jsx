@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import axios from 'axios'
+import API from "../services/api"
 
 function AIChat() {
   const [message, setMessage] = useState("")
@@ -18,16 +18,14 @@ function AIChat() {
     setMessage('')
     setIsLoading(true)
 
-    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5001'
-    axios
-      .post(`${apiBase}/api/chat`, { message: trimmed })
+    API.post("/chat", { message: trimmed })
       .then((res) => {
-        const reply = res?.data?.reply || 'Sorry, I could not generate a response.'
+        const reply = res?.data?.reply || "Sorry, I could not generate a response."
         setChat((prev) => {
           const copy = [...prev]
           for (let i = copy.length - 1; i >= 0; i--) {
-            if (copy[i].type === 'ai' && copy[i].loading) {
-              copy[i] = { type: 'ai', text: reply }
+            if (copy[i].type === "ai" && copy[i].loading) {
+              copy[i] = { type: "ai", text: reply }
               break
             }
           }
@@ -35,12 +33,18 @@ function AIChat() {
         })
       })
       .catch((err) => {
-        console.error('AI chat error', err?.response?.data || err.message || err)
+        console.error("AI chat error", {
+          url: err.config?.url,
+          status: err.response?.status,
+          data: err.response?.data,
+          message: err.message,
+        })
+
         setChat((prev) => {
           const copy = [...prev]
           for (let i = copy.length - 1; i >= 0; i--) {
-            if (copy[i].type === 'ai' && copy[i].loading) {
-              copy[i] = { type: 'ai', text: 'Sorry, something went wrong. Please try again.' }
+            if (copy[i].type === "ai" && copy[i].loading) {
+              copy[i] = { type: "ai", text: "Sorry, something went wrong. Please try again." }
               break
             }
           }

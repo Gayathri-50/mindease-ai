@@ -23,8 +23,12 @@ const Profile = () => {
       console.log(response.data);
 
     } catch (error) {
-      console.log(error);
-      alert("Login failed");
+      console.error("login error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Login failed (check console for details)");
     }
   };
 
@@ -39,8 +43,12 @@ const Profile = () => {
       console.log(response.data);
 
     } catch (error) {
-      console.log(error);
-      alert("Failed to fetch profile");
+      console.error("getProfile error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to fetch profile (check console for details)");
     }
   };
 

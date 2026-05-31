@@ -11,8 +11,12 @@ const Journal = () => {
       const response = await API.get("/journal");
       setJournals(response.data);
     } catch (error) {
-      console.log(error);
-      alert("Failed to load journals");
+      console.error("getJournals error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to load journals (check console for details)");
     }
   };
 
@@ -31,8 +35,12 @@ const Journal = () => {
       getJournals();
 
     } catch (error) {
-      console.log(error);
-      alert("Failed to save journal");
+      console.error("saveJournal error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to save journal (check console for details)");
     }
   };
 
@@ -45,8 +53,12 @@ const Journal = () => {
       getJournals();
 
     } catch (error) {
-      console.log(error);
-      alert("Failed to delete journal");
+      console.error("deleteJournal error", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+      alert("Failed to delete journal (check console for details)");
     }
   };
 

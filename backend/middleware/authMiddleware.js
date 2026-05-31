@@ -12,14 +12,22 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // FIX: Extract token from "Bearer <token>" format
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error("JWT_SECRET is not configured for auth middleware");
+      return res.status(500).json({
+        message: "Server configuration error: missing JWT secret",
+      });
+    }
+
+    // Extract token from "Bearer <token>" format
     const token = authHeader.startsWith("Bearer ") 
-      ? authHeader.slice(7)  // Remove "Bearer " (7 characters)
-      : authHeader;           // Fallback for raw token (backward compatibility)
+      ? authHeader.slice(7)
+      : authHeader;
 
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET
+      secret
     );
 
     req.user = decoded;

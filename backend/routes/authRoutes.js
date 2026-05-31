@@ -65,11 +65,19 @@ router.post("/login", async (req, res) => {
       });
     }
 
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error("JWT_SECRET is not configured for auth login");
+      return res.status(500).json({
+        message: "Server configuration error: missing JWT secret",
+      });
+    }
+
     const token = jwt.sign(
       {
         id: user._id,
       },
-      process.env.JWT_SECRET,
+      secret,
       {
         expiresIn: "7d",
       }
@@ -93,12 +101,17 @@ router.post("/login", async (req, res) => {
 const authMiddleware = require("../middleware/authMiddleware");
 
 router.get("/profile", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
 
-  res.status(200).json({
-    message: "Protected profile route",
-    user: req.user,
-  });
-
+    res.status(200).json({
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 });
 router.get("/test", (req, res) => {
   res.send("Auth Route Working");
