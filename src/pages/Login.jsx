@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import Spinner from "../components/ui/Spinner";
 import ErrorAlert from "../components/ui/ErrorAlert";
 
-function Register() {
-  const { register, isAuthenticated, loading, error, clearError } = useAuth();
-  const [name, setName] = useState("");
+function Login() {
+  const { login, isAuthenticated, loading, error, clearError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   if (loading) {
     return (
@@ -21,14 +23,14 @@ function Register() {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={from} replace />;
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !password.trim()) return;
+    if (!email.trim() || !password.trim()) return;
     setSubmitting(true);
-    await register(name, email, password);
+    await login(email, password);
     setSubmitting(false);
   };
 
@@ -36,7 +38,7 @@ function Register() {
     <div className="flex min-h-screen bg-[#050913]">
       {/* Background effects */}
       <div className="pointer-events-none fixed left-0 top-0 h-96 w-96 rounded-full bg-purple-600/20 blur-3xl" />
-      <div className="pointer-events-none fixed right-0 bottom-0 h-96 w-96 rounded-full bg-pink-500/15 blur-3xl" />
+      <div className="pointer-events-none fixed right-0 bottom-0 h-96 w-96 rounded-full bg-blue-500/15 blur-3xl" />
 
       <div className="relative z-10 m-auto flex w-full max-w-5xl flex-col items-center gap-8 px-4 lg:flex-row lg:gap-16">
         {/* Brand Section */}
@@ -56,17 +58,17 @@ function Register() {
             </div>
           </div>
           <h1 className="mb-4 text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
-            Begin your{" "}
+            Welcome back to your{" "}
             <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               wellness journey
             </span>
           </h1>
           <p className="mx-auto max-w-md text-lg text-slate-400 lg:mx-0">
-            Create your account to track moods, build habits, journal thoughts, and chat with your AI wellness companion.
+            Track your mood, build healthy habits, journal your thoughts, and get AI-powered wellness support.
           </p>
         </motion.div>
 
-        {/* Register Form */}
+        {/* Login Form */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -75,28 +77,13 @@ function Register() {
         >
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
             <div className="mb-6 text-center">
-              <h2 className="text-2xl font-bold text-white">Create Account</h2>
-              <p className="mt-1 text-sm text-slate-400">Join the MindEase community</p>
+              <h2 className="text-2xl font-bold text-white">Sign In</h2>
+              <p className="mt-1 text-sm text-slate-400">Enter your credentials to continue</p>
             </div>
 
             <ErrorAlert message={error} onDismiss={clearError} />
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-slate-300">
-                  Full Name
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  required
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
-                />
-              </div>
-
               <div>
                 <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-300">
                   Email Address
@@ -121,7 +108,7 @@ function Register() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Create a strong password"
+                  placeholder="••••••••"
                   required
                   className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
                 />
@@ -129,17 +116,17 @@ function Register() {
 
               <button
                 type="submit"
-                disabled={submitting || !name.trim() || !email.trim() || !password.trim()}
+                disabled={submitting || !email.trim() || !password.trim()}
                 className="w-full rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/20 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {submitting ? <Spinner size="sm" className="mx-auto" /> : "Create Account"}
+                {submitting ? <Spinner size="sm" className="mx-auto" /> : "Sign In"}
               </button>
             </form>
 
             <p className="mt-6 text-center text-sm text-slate-400">
-              Already have an account?{" "}
-              <Link to="/login" className="font-medium text-purple-400 hover:text-purple-300 transition-colors">
-                Sign in
+              Don't have an account?{" "}
+              <Link to="/register" className="font-medium text-purple-400 hover:text-purple-300 transition-colors">
+                Create one
               </Link>
             </p>
           </div>
@@ -149,4 +136,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Login;
